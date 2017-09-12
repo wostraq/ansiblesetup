@@ -1,0 +1,30 @@
+server {
+   listen 80;
+   server_name {{ play_hosts[0] }};
+   access_log /var/log/nginx/access.flaskbb.log;
+   error_log /var/log/nginx/error.flaskbb.log;
+
+   location / {
+	try_files $uri @flaskbb;
+   }
+
+   
+   # Static files
+	location /static {
+	   alias /home/danny/flaskbb/flaskbb/static/;
+		}
+
+ location ~ ^/_themes/([^/]+)/(.*)$ {
+        alias /var/apps/flaskbb/flaskbb/themes/$1/static/$2;
+    }
+
+    # robots.txt
+    location /robots.txt {
+        alias /var/apps/flaskbb/flaskbb/static/robots.txt;
+    }
+
+    location @flaskbb {
+        uwsgi_pass unix:///home/danny/flaskbb/flaskbb.sock;
+        include uwsgi_params;
+    }
+} 

@@ -1,0 +1,13 @@
+[Unit]
+Description = uWSGI runner to serve flaskbb
+After=network.target
+
+[Service]
+User=danny
+Group=www-data
+WorkingDirectory=/home/danny/flaskbb
+Environment="PATH=/home/danny/flaskbb-env/bin"
+ExecStart=/home/danny/flaskbb-env/bin/uwsgi --ini uwsgi.ini
+
+[Install]
+WantedBy=multi-user.target

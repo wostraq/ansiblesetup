@@ -1,0 +1,12 @@
+[uwsgi]
+chdir = /home/danny/flaskbb
+base = /home/danny/flaskbb
+home = /home/danny/flaskbb-env
+pythonpath = %(base)
+socket = /home/danny/flask.sock
+chmod-socket = 666
+module = wsgi
+callable = flaskbb
+uid = danny
+gid = www-data
+logto = /home/danny/flaskbb/logs/uwsgi.log
