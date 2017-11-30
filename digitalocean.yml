@@ -3,11 +3,7 @@
 
   vars:
     do_token: "{{ lookup('file','doapikey') }}"
-    service_host: "wostraq.net"
-    service_admin_email: "admin@wostraq.net"
-    service_name: "WOSTRAQ"
-    service_root_directory: "/opt"
-    letsencrypt_ssl_dir: "/etc/letsencrypt/live"
+    
 
 
   tasks:
@@ -51,6 +47,7 @@
 - hosts: new_remote_py3
   remote_user: root
 
+  
   tasks:
   - debug: msg="{{play_hosts[0]}}"
     
@@ -80,6 +77,12 @@
 - hosts: new_remote_py3
   remote_user: danny
   sudo: yes
+  vars:
+    service_host: "wostraq.net"
+    service_admin_email: "admin@wostraq.net"
+    service_name: "WOSTRAQ"
+    service_root_directory: "/opt"
+    letsencrypt_ssl_dir: "/etc/letsencrypt/live"
 
   tasks:
   - name: Install required apt-packages
