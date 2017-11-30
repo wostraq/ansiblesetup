@@ -90,6 +90,13 @@
      - redis-server
      - git
      - nginx
+     
+     # roles/nginx/tasks/main.yml
+  
+  
+   # https://weakdh.org/
+  - name: Generate dhparams file
+    shell: openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
 
   - name: Install uwsgi and virtualenv
     pip:
