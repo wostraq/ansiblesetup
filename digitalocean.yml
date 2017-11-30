@@ -3,6 +3,11 @@
 
   vars:
     do_token: "{{ lookup('file','doapikey') }}"
+    service_host: "wostraq.net"
+    service_admin_email: "admin@wostraq.net"
+    service_name: "WOSTRAQ"
+    service_root_directory: "/opt"
+    letsencrypt_ssl_dir: "/etc/letsencrypt/live"
 
 
   tasks:
