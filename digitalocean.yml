@@ -129,7 +129,12 @@
     # roles/service/tasks/main.yml
 
   - name: Add http nginx configuration
-    template: src=service.http.conf.j2 dest=/etc/nginx/sites-available/{{ service_name }}.http.conf owner=www-data group=www-data mode=0644
+    template: 
+      src: templates/service.http.conf.j2 
+      dest: /etc/nginx/sites-available/{{ service_name }}.http.conf 
+      owner: www-data 
+      group: www-data 
+      mode: 0644
 
   - name: Add http nginx symlink
     file: src=/etc/nginx/sites-available/{{ service_name }}.http.conf dest=/etc/nginx/sites-enabled/{{ service_name }}.http owner=www-data group=www-data state=link
