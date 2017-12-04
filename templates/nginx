@@ -1,6 +1,6 @@
 server {
    listen 80;
-   server_name {{ play_hosts[0] }};
+   server_name {{ play_hosts[0] }} {{forum_host}};
    access_log /var/log/nginx/access.flaskbb.log;
    error_log /var/log/nginx/error.flaskbb.log;
 
@@ -25,6 +25,28 @@ server {
 
     location @flaskbb {
         uwsgi_pass unix:///home/danny/flaskbb/flaskbb.sock;
+        include uwsgi_params;
+    }
+} 
+
+server {
+   listen 80;
+   server_name {{ play_hosts[0] }} {{website_host}};
+   access_log /var/log/nginx/access.website.log;
+   error_log /var/log/nginx/error.website.log;
+
+   location / {
+	try_files $uri @website;
+   }
+
+   
+   # Static files
+	location /static {
+	   alias /home/danny/website/static/;
+		}
+
+    location @website {
+        uwsgi_pass unix:///home/danny/website/website.sock;
         include uwsgi_params;
     }
 } 
