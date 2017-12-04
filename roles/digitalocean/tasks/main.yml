@@ -3,7 +3,6 @@
 
   vars:
     do_token: "{{ lookup('file','doapikey') }}"
-    
 
 
   tasks:
@@ -47,7 +46,6 @@
 - hosts: new_remote_py3
   remote_user: root
 
-  
   tasks:
   - debug: msg="{{play_hosts[0]}}"
     
@@ -77,12 +75,6 @@
 - hosts: new_remote_py3
   remote_user: danny
   sudo: yes
-  vars:
-    service_host: "secure.wostraq.net"
-    service_admin_email: "admin@wostraq.net"
-    service_name: "WOSTRAQ"
-    service_root_directory: "/opt"
-    letsencrypt_ssl_dir: "/etc/letsencrypt/live"
 
   tasks:
   - name: Install required apt-packages
@@ -98,75 +90,6 @@
      - redis-server
      - git
      - nginx
-     - python
-     - python-dev
-     - gcc
-     - dialog
-     - libaugeas0
-     - augeas-lenses
-     - libssl-dev
-     - libffi-dev
-     - ca-certificates
-     - python-pip
-     - python-virtualenv
-     - git
-     - libpython-dev
-     - zlib1g-dev
-
-     
-     # roles/nginx/tasks/main.yml
-  
-  
-     
-    # roles/letsencrypt/tasks/main.yml
-
-  - name: Lets Encrypt client
-    git: 
-      dest: /opt/certbot 
-      clone: yes 
-      repo: https://github.com/certbot/certbot 
-      force: yes
-
- # Auto-renew certificates and reload nginx
-
-  - name: Add crontab to renew certificates
-    cron: 
-      minute: "30" 
-      hour: "2" 
-      weekday: "1" 
-      job: "/opt/certbot/certbot-auto renew >> /var/log/le-renew.log"
-
-  - name: Add crontab to reload server
-    cron: 
-      minute: "35" 
-      hour: "2" 
-      weekday: "1" 
-      job: "/etc/init.d/nginx reload"
-    
-    # roles/service/tasks/main.yml
-
-  
-  - name: Write nginx configuration
-    template: 
-      src: templates/nginx
-      dest: /etc/nginx/sites-enabled/flaskbb
-      owner: www-data
-      group: www-data
-      mode: 0644
-
-  - name: Suppress default nginx configuration
-    file:
-      path: /etc/nginx/sites-enabled/default
-      state: absent
-
-  - name: Create certificate
-    shell: ./certbot-auto  --nginx --email {{ service_admin_email }} --agree-tos --webroot-path=/usr/share/nginx/html -d {{ service_host }} -n --redirect;
-    args:
-      chdir: /opt/certbot
-
-  - name: reload nginx
-    service: name=nginx state=reloaded
-    
 
   - name: Install uwsgi and virtualenv
     pip:
@@ -205,6 +128,16 @@
     with_items:
       - /etc/nginx/sites-enabled
       - /etc/uwsgi/apps-enabled
+
+  - name: Write nginx configuration
+    template: 
+      src: templates/nginx
+      dest: /etc/nginx/sites-enabled/flaskbb
+
+  - name: Suppress default nginx configuration
+    file:
+      path: /etc/nginx/sites-enabled/default
+      state: absent
 
   - name: Write uwsgi configuration
     copy: 

@@ -1,6 +1,6 @@
 server {
    listen 80;
-   server_name {{ play_hosts[0] }};
+   server_name {{ play_hosts[0] }} secure.wostraq.net;
    access_log /var/log/nginx/access.flaskbb.log;
    error_log /var/log/nginx/error.flaskbb.log;
 
