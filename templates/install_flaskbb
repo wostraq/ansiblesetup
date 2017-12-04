@@ -1,0 +1,6 @@
+#! /bin/bash
+
+. /home/danny/flaskbb-env/bin/activate
+flaskbb makeconfig
+flaskbb install
+sudo service flaskbb start
