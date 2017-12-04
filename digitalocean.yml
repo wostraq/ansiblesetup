@@ -246,14 +246,17 @@
     copy: 
       src: templates/uwsgi
       dest: /home/danny/flaskbb/uwsgi.ini
+      owner: danny
+      group: www-data
 
   - name: Write uwsgi systemctl
     copy:
       src: templates/uwsgi-runner
       dest: /etc/systemd/system/flaskbb.service
 
-  - name: Start flaskbb service
-    systemd:
-      name: flaskbb.service
-      enabled: yes
-      state: started    
+  - name: Writing flaskbb installation script
+    copy:
+      src: templates/flaskbb-installer
+      dest: /home/danny/install_flaskbb.sh
+      chmod: 0777
+      
