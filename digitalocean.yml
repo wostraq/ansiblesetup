@@ -78,7 +78,8 @@
   remote_user: danny
   sudo: yes
   vars:
-    service_host: "secure.wostraq.net"
+    forum_host: "secure.wostraq.net"
+    website_host: "web.wostraq.net"
     service_admin_email: "admin@wostraq.net"
     service_name: "WOSTRAQ"
     service_root_directory: "/opt"
@@ -114,12 +115,6 @@
      - zlib1g-dev
 
      
-     # roles/nginx/tasks/main.yml
-  
-  
-     
-    # roles/letsencrypt/tasks/main.yml
-
   - name: Lets Encrypt client
     git: 
       dest: /opt/certbot 
@@ -160,7 +155,7 @@
       state: absent
 
   - name: Create certificate
-    shell: ./certbot-auto  --nginx --email {{ service_admin_email }} --agree-tos --webroot-path=/usr/share/nginx/html -d {{ service_host }} -n --redirect;
+    shell: ./certbot-auto  --nginx --email {{ service_admin_email }} --agree-tos --webroot-path=/usr/share/nginx/html -d {{ service_host }} -d {{ website_host}} -n --redirect;
     args:
       chdir: /opt/certbot
 
@@ -184,14 +179,19 @@
 
   - name: Installing FlaskBB
     git:
-      repo: https://github.com/sh4nks/flaskbb.git
+      repo: https://github.com/wostraq/flaskbb.git
       dest: /home/danny/flaskbb
 
   - name: Installing FlaskBB dependencies
     pip:
        chdir: /home/danny/flaskbb
        requirements: /home/danny/flaskbb/requirements.txt 
-       virtualenv: /home/danny/flaskbb-env    
+       virtualenv: /home/danny/flaskbb-env
+
+  - name: Install website
+    git:
+      repo: https://github.com/wostraq/wostraqwebsite.git
+      dest: /home/danny/website    
 
 - hosts: new_remote_py3
   remote_user: danny
@@ -206,17 +206,29 @@
       - /etc/nginx/sites-enabled
       - /etc/uwsgi/apps-enabled
 
-  - name: Write uwsgi configuration
+  - name: Write flaskbb uwsgi configuration
     copy: 
       src: templates/uwsgi
       dest: /home/danny/flaskbb/uwsgi.ini
       owner: danny
       group: www-data
 
-  - name: Write uwsgi systemctl
+  - name: Write website uwsgi configuration
+    copy:
+      src: templates/web_uwsgi
+      dest: /home/danny/website/uwsgi.ini
+      owner: danny
+      group: www-data
+
+  - name: Write flaskbb systemctl
     copy:
       src: templates/uwsgi-runner
       dest: /etc/systemd/system/flaskbb.service
+
+  - name: Write website systemctl
+    copy:
+      src: templates/web-uwsgi-runner
+      dest: /etc/systemd/system/website.service
 
   - name: Writing flaskbb installation script
     copy:
@@ -224,3 +236,12 @@
       dest: /home/danny/install_flaskbb.sh
       chmod: 0777
       
+  - name: Write celery systemd file
+    copy:
+      src: templates/celery.service
+      dest: /etc/systemd/system/celery.service
+
+  - name: Write celery config file
+    copy:
+      src: templates/celery.conf
+      dest: /etc/conf.d/celery
