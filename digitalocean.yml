@@ -190,7 +190,7 @@
 
   - name: Install website
     git:
-      repo: https://github.com/wostraq/wostraqwebsite.git
+      repo: https://github.com/wostraq/website.git
       dest: /home/danny/website    
 
 - hosts: new_remote_py3
