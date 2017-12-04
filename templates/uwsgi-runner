@@ -7,7 +7,7 @@ User=danny
 Group=www-data
 WorkingDirectory=/home/danny/flaskbb
 Environment="PATH=/home/danny/flaskbb-env/bin"
-ExecStart=/home/danny/flaskbb-env/bin/uwsgi --ini uwsgi.ini
+ExecStart=/usr/local/bin/uwsgi --ini uwsgi.ini
 
 [Install]
 WantedBy=multi-user.target
