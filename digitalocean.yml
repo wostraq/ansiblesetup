@@ -124,15 +124,27 @@
     # roles/letsencrypt/tasks/main.yml
 
   - name: Lets Encrypt client
-    git: dest=/opt/certbot clone=yes repo=https://github.com/certbot/certbot force=yes
+    git: 
+      dest: /opt/certbot 
+      clone: yes 
+      repo: https://github.com/certbot/certbot 
+      force: yes
 
  # Auto-renew certificates and reload nginx
 
   - name: Add crontab to renew certificates
-    cron: minute="30" hour="2" weekday="1" job="/opt/certbot/certbot-auto renew >> /var/log/le-renew.log"
+    cron: 
+      minute: "30" 
+      hour: "2" 
+      weekday: "1" 
+      job: "/opt/certbot/certbot-auto renew >> /var/log/le-renew.log"
 
   - name: Add crontab to reload server
-    cron: minute="35" hour="2" weekday="1" job="/etc/init.d/nginx reload"
+    cron: 
+      minute: "35" 
+      hour: "2" 
+      weekday: "1" 
+      job: "/etc/init.d/nginx reload"
     
     # roles/service/tasks/main.yml
 
@@ -145,10 +157,17 @@
       mode: 0644
 
   - name: Add http nginx symlink
-    file: src=/etc/nginx/sites-available/{{ service_name }}.http.conf dest=/etc/nginx/sites-enabled/{{ service_name }}.http owner=www-data group=www-data state=link
+    file: 
+      src: /etc/nginx/sites-available/{{ service_name }}.http.conf 
+      dest: /etc/nginx/sites-enabled/{{ service_name }}.http 
+      owner: www-data
+      group: www-data 
+      state: link
 
   - name: reload nginx
-    service: name=nginx state=reloaded
+    service: 
+      name: nginx 
+      state: reloaded
 
   - name: Create certificate
     shell: ./certbot-auto certonly --webroot --email {{ service_admin_email }} --agree-tos --webroot-path=/usr/share/nginx/html -d {{ service_host }};
