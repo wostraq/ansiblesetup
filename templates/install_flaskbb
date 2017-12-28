@@ -4,3 +4,4 @@
 flaskbb makeconfig
 flaskbb install
 sudo service flaskbb start
+sudo apt-get install postfix

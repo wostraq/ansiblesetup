@@ -78,7 +78,7 @@
   remote_user: danny
   sudo: yes
   vars:
-    forum_host: "secure.wostraq.net"
+    forum_host: "forum.wostraq.net"
     website_host: "web.wostraq.net"
     service_admin_email: "admin@wostraq.net"
     service_name: "WOSTRAQ"
