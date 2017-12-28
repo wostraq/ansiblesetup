@@ -155,7 +155,7 @@
       state: absent
 
   - name: Create certificate
-    shell: ./certbot-auto  --nginx --email {{ service_admin_email }} --agree-tos --webroot-path=/usr/share/nginx/html -d {{ service_host }} -d {{ website_host}} -n --redirect;
+    shell: ./certbot-auto  --nginx --email {{ service_admin_email }} --agree-tos --webroot-path=/usr/share/nginx/html -d {{ forum_host }} -d {{ website_host}} -n --redirect;
     args:
       chdir: /opt/certbot
 
